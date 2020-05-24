@@ -33,11 +33,8 @@ def main():
   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
 
   vectorizer = TfidfVectorizer()
-  dim_reduction = TruncatedSVD(n_components=100)
   X_train = vectorizer.fit_transform(X_train)
-  X_train = dim_reduction.fit_transform(X_train)
   X_test = vectorizer.transform(X_test)
-  X_test = dim_reduction.fit_transform(X_test)
   
   clf = MultinomialNB(alpha=0)
   # clf = LogisticRegression(C=0.5)
