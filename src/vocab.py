@@ -165,10 +165,11 @@ def pad_collate_fn(batch, pad_index=0):
     return texts, labels, lengths
 
 
-def train_test_split(dataset, train_part):
-    shuffled = random.shuffle(dataset.instances)
+def train_test_split(dataset, test_part):
+    random.shuffle(dataset.instances)
+    shuffled = dataset.instances
 
-    N_test = train_part * len(shuffled)
+    N_test = int(test_part * len(shuffled))
 
     train_dataset = NLPDataset(shuffled[N_test:])
     test_dataset = NLPDataset(shuffled[:N_test])
@@ -176,13 +177,13 @@ def train_test_split(dataset, train_part):
     return train_dataset, test_dataset
 
 
-def load_dataset(file_name, train_batch, test_batch):
+def load_dataset(file_name, test_part, train_batch, test_batch):
     dataset_pd = load(file_name)
-    dataset = NLPDataset.load(dataset.text, dataset.emoji, tokens.tokenize_for_glove)
+    dataset = NLPDataset.load(dataset_pd.text, dataset_pd.emoji, tokens.tokenize_for_glove)
 
     text_vocab, label_vocab = dataset.create_vocab()
 
-    train_dataset, test_dataset = train_test_split(dataset, .2)
+    train_dataset, test_dataset = train_test_split(dataset, test_part)
 
     train_dataset.set_vocab(text_vocab, label_vocab)
     test_dataset.set_vocab(text_vocab, label_vocab)

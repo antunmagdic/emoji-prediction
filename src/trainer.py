@@ -12,6 +12,7 @@ def main():
   parser.add_argument('datafile')
   args = parser.parse_args()
 
+  test_part = .2
   train_batch_size = 128
   test_batch_size = 128
   embedding_size = 100
@@ -21,7 +22,7 @@ def main():
   learning_rate = 1e-3
 
   print('Loading data...', end='', flush=True)
-  train_dataset, test_dataset, voc = vocab.load_dataset(args.datafile, train_batch_size, test_batch_size)
+  train_dataset, test_dataset, voc = vocab.load_dataset(args.datafile, test_part, train_batch_size, test_batch_size)
   print('\rLoading data. Done.')
 
   print('Loading word embeddings...', end='', flush=True)
