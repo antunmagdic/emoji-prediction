@@ -16,23 +16,28 @@ def main():
   args = parser.parse_args()
 
   test_part = .2
-  train_batch_size = 128
+  train_batch_size = 32
   test_batch_size = 128
   embedding_size = 100
   hidden_size = 300
   classes = 20
+  num_layers = 2
+  dropout = .2
+  bidirectional = True
   epochs = 20
   learning_rate = 1e-3
+  save = True
 
   print('Loading data...', end='', flush=True)
   train_dataset, test_dataset, voc = vocab.load_dataset(args.datafile, test_part, train_batch_size, test_batch_size)
   print('\rLoading data. Done.')
 
   print('Loading word embeddings...', end='', flush=True)
+  #embs = vocab.get_random_embeddings(voc, embedding_size)
   embs = vocab.get_pretrained_embeddings(voc, args.word_embeddings, embedding_size)
   print('\rLoading word embeddings. Done.')
 
-  model = network.RNN(embedding_size, hidden_size, classes, embs)
+  model = network.RNN(embedding_size, hidden_size, classes, embs, num_layers, dropout, bidirectional)
 
   criterion = torch.nn.CrossEntropyLoss()
   optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
@@ -49,6 +54,12 @@ def main():
     print('Epoch: %d' %(epoch + 1), " | time in %d minutes, %d seconds" %(mins, secs))
     print(f'\tLoss: {train_loss:.4f}(train)\t|\tAcc: {train_acc * 100:.1f}%(train)')
     print(f'\tLoss: {valid_loss:.4f}(valid)\t|\tAcc: {valid_acc * 100:.1f}%(valid)')
+
+  if save:
+  	print('Saving model...', end='', flush=True)
+  	fname = model.save()
+  	print('\rSaving model. Done.')
+  	print('Model saved in', fname)
 
 
 if __name__ == '__main__':

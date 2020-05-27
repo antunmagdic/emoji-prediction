@@ -54,6 +54,9 @@ class NLPDataset(torch.utils.data.Dataset):
             words = []
 
             for token in tokenizer(t):
+                if token == 'RE' or token == 're':
+                    continue
+                
                 if token[0] == '@':
                     words += ['<user>']
                 elif token[0] == '#':
