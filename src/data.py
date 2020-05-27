@@ -30,7 +30,10 @@ def count_labels(y):
   return counts
 
 
-def _make_numeric_labels(labels):
+def _make_numeric_labels(labels, label_to_y=None):
+  if label_to_y is not None:
+    return ([label_to_y(label) for label in labels],
+            {label_to_y(label): label for label in set(labels)})
   emoji_to_n = dict()
   numeric_labels = list()
   c = 0
@@ -42,7 +45,7 @@ def _make_numeric_labels(labels):
   return numeric_labels, {emoji_to_n[emoji]: emoji for emoji in emoji_to_n}
 
 
-def prepare(text, emoji, representation, most_frequent=30):
+def prepare(text, emoji, representation, most_frequent=30, emoji_to_y=None):
   X, y = list(), list()
   filtered_text = list()
   counts = dict()
@@ -69,7 +72,7 @@ def prepare(text, emoji, representation, most_frequent=30):
   filtered_text, X, y = zip(
     *[(t, x, e) for t, x, e in zip(filtered_text, X, y) if e in emojis_to_keep])
 
-  y, y_to_emoji = _make_numeric_labels(y)
+  y, y_to_emoji = _make_numeric_labels(y, emoji_to_y)
 
   return filtered_text, np.array(X), np.array(y), y_to_emoji
 
