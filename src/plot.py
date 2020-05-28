@@ -3,7 +3,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def confusion_matrix(cm, labels):
+def confusion_matrix(cm, labels, sqrt=False):
+  cm = cm.astype(np.float) / cm.sum(axis=1)[:, np.newaxis]
+  
+  if sqrt:
+    cm = np.sqrt(cm)
+
   plt.imshow(cm, cmap='Blues')
   plt.title('Confusion matrix')
   # plt.colorbar()
@@ -14,8 +19,6 @@ def confusion_matrix(cm, labels):
   plt.xlim(-0.5, len(labels) - 0.5)
   plt.ylim(len(labels) - 0.5, -0.5)
   plt.grid(linewidth=0.2)
-
-  cm = cm.astype(np.float) / cm.sum(axis=1)[:, np.newaxis]
 
   plt.ylabel('True label')
   plt.xlabel('Predicted label')
