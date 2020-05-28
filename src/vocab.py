@@ -180,21 +180,26 @@ def train_test_split(dataset, test_part):
     return train_dataset, test_dataset
 
 
-def load_dataset(file_name, test_part, train_batch, test_batch):
-    dataset_pd = load(file_name)
-    dataset = NLPDataset.load(dataset_pd.text, dataset_pd.emoji, tokens.tokenize_for_glove)
+def load_dataset(train_file, valid_file, test_file, train_batch, valid_batch, test_batch):
+    pd_train = load(train_file)
+    pd_valid = load(valid_file)
+    pd_test = load(test_file)
 
-    text_vocab, label_vocab = dataset.create_vocab()
+    train_dataset = NLPDataset.load(pd_train.text, pd_train.emoji, tokens.tokenize_for_glove)
+    valid_dataset = NLPDataset.load(pd_valid.text, pd_valid.emoji, tokens.tokenize_for_glove)
+    test_dataset = NLPDataset.load(pd_test.text, pd_test.emoji, tokens.tokenize_for_glove)
 
-    train_dataset, test_dataset = train_test_split(dataset, test_part)
+    text_vocab, label_vocab = train_dataset.create_vocab()
 
     train_dataset.set_vocab(text_vocab, label_vocab)
+    valid_dataset.set_vocab(text_vocab, label_vocab)
     test_dataset.set_vocab(text_vocab, label_vocab)
 
     train_data_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=train_batch, shuffle=True, collate_fn=pad_collate_fn)
+    valid_data_loader = torch.utils.data.DataLoader(dataset=valid_dataset, batch_size=valid_batch, shuffle=False, collate_fn=pad_collate_fn)
     test_data_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=test_batch, shuffle=False, collate_fn=pad_collate_fn)
 
-    return train_data_loader, test_data_loader, text_vocab
+    return train_data_loader, valid_data_loader, test_data_loader, text_vocab
 
 
 def load(filename):
