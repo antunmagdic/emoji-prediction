@@ -1,0 +1,48 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citename{Barbieri \bgroup et al.\egroup
+  }2017]{barbieri2017emojis}
+Francesco Barbieri, Miguel Ballesteros, and Horacio Saggion.
+\newblock 2017.
+\newblock Are emojis predictable?
+
+\bibitem[\protect\citename{Bishop}2006]{bishop2006pattern}
+Christopher~M. Bishop.
+\newblock 2006.
+\newblock {\em Pattern Recognition and Machine Learning (Information Science
+  and Statistics)}.
+\newblock Springer-Verlag, Berlin, Heidelberg.
+
+\bibitem[\protect\citename{Hochreiter and Schmidhuber}1997]{hochreiter1997long}
+Sepp Hochreiter and Jürgen Schmidhuber.
+\newblock 1997.
+\newblock Long short-term memory.
+\newblock {\em Neural computation}, 9:1735--80, 12.
+
+\bibitem[\protect\citename{Kingma and Ba}2014]{kingma2014adam}
+Diederik~P. Kingma and Jimmy Ba.
+\newblock 2014.
+\newblock Adam: A method for stochastic optimization.
+
+\bibitem[\protect\citename{Manning \bgroup et al.\egroup
+  }2008]{manning2008introduction}
+Christopher~D Manning, Prabhakar Raghavan, and Hinrich Sch{\"u}tze.
+\newblock 2008.
+\newblock {\em Introduction to information retrieval}.
+\newblock Cambridge university press.
+
+\bibitem[\protect\citename{Murphy}2012]{murphy2012machine}
+Kevin~P. Murphy.
+\newblock 2012.
+\newblock {\em Machine Learning: A Probabilistic Perspective}.
+\newblock The MIT Press.
+
+\bibitem[\protect\citename{Pennington \bgroup et al.\egroup
+  }2014]{pennington2014glove}
+Jeffrey Pennington, Richard Socher, and Christopher~D. Manning.
+\newblock 2014.
+\newblock Glove: Global vectors for word representation.
+\newblock In {\em Empirical Methods in Natural Language Processing (EMNLP)},
+  pages 1532--1543.
+
+\end{thebibliography}
