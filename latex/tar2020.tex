@@ -45,8 +45,17 @@ Unska 3, 10000 Zagreb, Croatia\\
 }
           
          
-\abstract{ 
-Abstract...
+\abstract{
+With the rise in popularity of social networks such as Facebook, Twitter, Instagram
+and many others emojis have become more prominent and ubiquitous than most 
+people could have expected. People today use them for various purposes and 
+emojis can contain much information. Because of that they could prove to be 
+useful for various NLP tasks. The same way word prediction helps models to 
+"understand" words, emoji prediction could help them to "understand" emojis. 
+But the task of emoji prediction is much harder than the task of predicting 
+words. In this paper we compare simple models on the task of emoji prediction 
+with the goal of identifying the main difficulties. We then cluster emojis to 
+show main sources of problems arising in their prediction.
 }
 
 \begin{document}
@@ -54,8 +63,49 @@ Abstract...
 \maketitleabstract
 
 \section{Introduction}
+It is not wrong to say that the world without emojis is unimaginable. Those 
+miniature pictures have an enormous imapct on our lives, probably much more so than
+we actually realize. Billions of emojis are used by people all around the world 
+every day to better express themselves. Some use them to add emotion to text, 
+some to better communicate the message they want to send, some to indicate 
+sarcasm to blur the line between written and in-person communication even more 
+and some just because they like them. Sometimes emojis are used to add subtle 
+details to text, while other times they are used to completely replace the text.
+And they often replace it very well. One emoji can often times contain as much, 
+if not more, information as multiple words.
+
+It is obvious that since emojis contain much information and their understanding
+could improve performance on many NLP tasks. So far, majority of works handle 
+the emoji prediction in a similar way and produced satisfying results. However, 
+this problem might be too difficult the way it is currently approached. 
+
+The task seems simple to most people because almost everyone today has an 
+autocomplete keyboard that suggests emojis while the person is typing the text. 
+It seems that suggestions are solid: every time one types the word \emph{sad}, 
+\emoji{1F614} is suggested. But it is not very often that people really choose 
+the suggested emoji. People (still) have their own minds and decide by 
+themselves which emoji they want to use. There are many factors that impact the 
+choice of emoji. If the model is to be successful at the task of emoji 
+prediction it should understand the majority of those factors. Oftentimes, not 
+all of those factors are included in the text which contains emojis.
+
+In this paper we run two experiments. First, we compare some simple models at 
+the task of emoji prediction to gain some insight about the problem. After that, 
+we cluster emojis which and point to some issues that should be resolved before
+emoji prediction could substantially improve.
+
+One great thing about emoji prediction is that there is much available and 
+easily obtainable data. There are billions of new emojis occurrences on 
+Facebook, Twitter, Instagram and various other social networks every day. In 
+this paper we use data from Twitter. Ten million tweets are collected and tweets
+with most frequent emojis are used for the task of emoji prediction.
 
 \section{Related work}
+Over time, emojis evolved into ubiquitous and powerful communication mechanism, especially on social networks. Therefore, there has been a rise in the number of studies trying to understand them better and even predict them. As far as we know, most of the previous works are mainly focused on emoji prediction, rather than examination of their true meaning. 
+
+State-of-the-art results for emoji prediction task are obtained mostly by models based on bidirectional LSTMs (BLSTMs) \citep{barbieri2017}. In addition to BLSTM, attention mechanism ensures dropout of less informative words \citep{millions}. Another interesting approach to the emoji prediction problem is an investigation of the temporal information impact on emojis \citep{temporal}. It is shown that the usage of some emojis variates depending on the time of the year.
+
+On the other hand, emoji prediction seems impossible if the meaning of emoji is unknown. \citep{mean} used skip-gram embedding model for quantitve and qualitative evaluation of Twitter emojis. Vector pair similarity and relatedness tests were performed, as well as clustering. Each emoji was represented with cluster containing most similar text tokens.
 
 \section{Dataset}
 
@@ -223,7 +273,7 @@ More interesting result is the following. Logistic regression regression with
 TF-IDF representations outperforms BLSTM by almost 2\%. BLSTM is a very powerful
 model with a lot of hyperparameters, so it can be tuned to perform better than 
 it did, but again it was not our goal to achieve the best possible 
-accuracy\footnote{We were constrained by available computing power.}.
+accuracy\footnote{We were also constrained by the available computing power.}.
 Results still show that taking into account temporal information, i.\,e. the 
 exact word order when predicting emojis may not bring a lot more crucial 
 information to the model. What is more important is the general information of 
@@ -237,13 +287,19 @@ offer much improvement with repect to binary bag of words representation.
 In Figure \ref{fig:confusion_matrix} the confusion matrix for feed forward 
 neural network using TF-IDF representation is shown. Some interesting 
 information can be extracted from the confusion matrix. It can be seen that the
-model often confuses emojis in the following groups: 
-
+model often confuses emojis in the following groups: \emoji{2764}, 
+\emoji{1F495}; \emoji{1F62D}, \emoji{1F614}, \emoji{1F629}; \emoji{1F602},
+\emoji{1F644} and \emoji{1F914}, \emoji{1F644}, \emoji{1F440}. Emojis in 
+those groups convey the same meaning so it is reasonable that the model has 
+trouble choosing between them. This issue will be explored in more detail in the
+following section.
     
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.8\columnwidth]{img/confusion_matrix.pdf}
-\caption{Confusion matrix...}
+\caption{Confusion matrix for feed forward neural network with TF-IDF 
+representations. Values shown are square roots of real counts (for better 
+visibility).}
 \label{fig:confusion_matrix}
 \end{center}
 \end{figure}
@@ -343,7 +399,24 @@ users might show joy and happines using \emoji{1F60A}, while others might use
 \emoji{1F525} or \emoji{1F4AF}. Information about a user profile would without a
 doubt be helpful in emoji prediction.
 
-\section{Conclusions}
+\section{Conclusion}
+
+In this paper we investigated the difficulties that arise during the task of 
+emoji prediction. Even though the task seems simple on the surface, there are 
+many subtle problems that need to be solved in order to create a well performing
+system for emoji prediction. We have shown that the crucial obstacle in 
+achieving such a goal is synonymy among various emojis. To convey the same sense
+and meaning different tweet authors choose emojis in different ways. To achieve 
+better performance at emoji prediction the model would have to be fed more 
+information about the user. In that way the model could identify which emoji 
+from the group of synonymous emojis the author would most likely pick (based on 
+his previous tweets or other information). This is a pattern that emerges in 
+various NLP and AI tasks: background knowledge can be helpful and offer crucial 
+information for prediction.
+
+We don't expect that models for emoji prediction will improve substantially as 
+long as information about authors is not provided. As future work models that 
+use author profiles for more informed prediction should be developed.
 
 % \section*{Acknowledgements}
 
