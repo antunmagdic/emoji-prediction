@@ -1,0 +1,21 @@
+Recurrent neural networks currently have great results in modeling NLP tasks.
+For that reason, Long Short-Term Memory (LSTM) network is implemented.
+LSTM is a type of recurrent neural network that is able to capture long-term dependencies.
+Fully-connected layer is added after the LSTM cell to map the output vector size to the number of observed emojies.
+Each vector position in the output corresponds to a certain emoji, where the final output of the network is the emoji for which the output vector position is maximum, as given in formula \eqref{eq:lstm_out}.
+\begin{equation}
+	\label{eq:lstm_out}
+	\boldsymbol{y} = \operatorname*{argmax}_{i} \boldsymbol{o}
+\end{equation}
+Here, $\boldsymbol{y}$ is the predicted emoji, $\boldsymbol{o}$ is the output of the network and $i$ is the position in vector $\boldsymbol{o}$.
+As there are 20 different emojies the model can predict, $\boldsymbol{y}$ and $i$ are integers ranging from $0$ to $19$.
+
+Each input tweet is represented using pretrained word embeddings.
+Word embeddings are trained on twitter data using GloVe algorithm and are of size 100.
+Two bi-directional LSTM (BLSTM) layers with hidden size of 300 are used.
+Bi-Directional LSTM layer is composed of two LSTM layers, where one looks into the past and takes the sequence from the first word to the last and the other LSTM layer looks into the future and takes the sequence from the last word to the first.
+Both of those layers' outputs are then concatenated into one output of size 600.
+After the first BLSTM layer, dropout layer with dropout rate of $0.2$ is used.
+In the end, fully-connected layer with size of 20 is used, because there are 20 different observed emojies.
+Parameters are optimized using ADAM algorithm with initial learning rate of $10^{-3}$.
+Model is trained for $20$ epochs over the train set with batch size of $32$.
