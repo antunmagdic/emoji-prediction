@@ -9,6 +9,7 @@
 \usepackage{amssymb}
 \usepackage[twitter]{emoji}
 \usepackage{numprint}
+\usepackage{csquotes}
 
 \DeclareMathOperator*{\argmax}{argmax}
 
@@ -71,6 +72,7 @@ respectively. Classes in all sets are perfectly balanced\footnote{... as all
 things should be.}.
 
 \section{Models and Representations}
+\label{sec:models}
 
 We experimented with various models. Different models use different input 
 representations which include binary bag of words vectors, TF-IDF vectors 
@@ -128,7 +130,7 @@ representation and we use three hidden layers with sizes 150, 100, 50 in the
 network with mean GloVe input representation. We set the regularization 
 parameter to $10^{-5}$ for both networks.
 
-\subsection{LSTM}
+\subsection{Bidirectional LSTM}
 
 A class of neural networks that performs remarkably well on NLP tasks are 
 recurrent neural networks. Hence, we also use a Long Short-Term Memory (LSTM) 
@@ -171,28 +173,175 @@ their prediction.
 
 \subsection{Experiment 1}
 
+In experiment one we compare the performance of models described in Section 
+\ref{sec:models}. It is important to stress out that our goal here was not to 
+create a model that will achieve state-of-the-art results, but to experiment 
+with different models and representations, compare them and try to understand 
+the results. We also wanted to identify the difficulties of achieving high 
+accuracies on this task, which is more thoroughly done in Experiment 2.
+
+Achieved accuracies of the models are presented in Table 
+\ref{tab:accuracy}. Only accuracies are shown since classes in test set are 
+balanced.
+
 \begin{table}
-\caption{Accuracy various models on test data.}
+\caption{Accuracy of various models on test data. NB stand for Na\"ive Bayes, LR
+for logistic regression, NN for feed forward neural network and BLSTM for 
+bidirectional LSTM.}
 \label{tab:accuracy}
 \begin{center}
 \begin{tabular}{lr}
 \toprule
 Model & Accuracy (\%) \\
 \midrule
-NB            & 0 \\
-LR GloVe      & 0 \\
-LR TF-IDF     & 0 \\
-NN GloVe      & 0 \\
-NN TF-IDF     & 0 \\
-LSTM          & 0 \\
+NB        & 51.15 \\
+LR GloVe  & 33.78 \\
+LR TF-IDF & 53.35 \\
+NN GloVe  & 45.67 \\
+NN TF-IDF & 51.05 \\
+BLSTM     & 51.40 \\
 \bottomrule
 \end{tabular}
 \end{center}
 \end{table}
 
+The best accuracy is obtained by logistic regression that uses TF-IDF 
+representation.
+
+We first compare the models without temporal information so BLSTM is left out 
+for now and will be tackled later. It is clear from Table \ref{tab:accuracy} 
+that the models which use TF-IDF representations perform better than the ones 
+that use mean GloVe representations. Feed forward neural network with TF-IDF 
+representations achieved 51.05\% accuracy and logistic regression with TF-IDF 
+representations achieved 53.35\% accuracy, while the same models with GloVe 
+representations achieved 45.67\% and 33.78\% accuracy, respectively. This is to 
+be expected since TF-IDF vectors contain much more information than mean GloVe 
+vectors, which are basically tweets reduced to a single word (that ideally
+combines the senses of all the words in the tweet).
+
+More interesting result is the following. Logistic regression regression with 
+TF-IDF representations outperforms BLSTM by almost 2\%. BLSTM is a very powerful
+model with a lot of hyperparameters, so it can be tuned to perform better than 
+it did, but again it was not our goal to achieve the best possible 
+accuracy\footnote{We were constrained by available computing power.}.
+Results still show that taking into account temporal information, i.\,e. the 
+exact word order when predicting emojis may not bring a lot more crucial 
+information to the model. What is more important is the general information of 
+the words from the tweet.
+
+Another interesting, and for us surprising, fact is strong performance by the 
+Na\"ive Bayes model. We conclude that the data doesn't strongly violate the 
+na\"ive assumption. It also signals that TF-IDF representation maybe doesn't 
+offer much improvement with repect to binary bag of words representation.
+
+In Figure \ref{fig:confusion_matrix} the confusion matrix for feed forward 
+neural network using TF-IDF representation is shown. Some interesting 
+information can be extracted from the confusion matrix. It can be seen that the
+model often confuses emojis in the following groups: 
+
+    
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.8\columnwidth]{img/confusion_matrix.pdf}
+\caption{Confusion matrix...}
+\label{fig:confusion_matrix}
+\end{center}
+\end{figure}
+
 \subsection{Experiment 2}
 
-In the second experiment...
+In the second experiment we cluster the tweets using $K$-means clustering 
+\citep{bishop2006pattern}. The motivation behind this is as follows: if the 
+quality of clustering is good with respect to class labels (emojis), i.\,e. 
+tweets which include the same emoji are often found in the same cluster, the
+task of emoji prediction is probably not very hard. On the other hand, if the 
+quality of clustering is poor, the prediction is probably hard since tweets with
+different emojis are not easily separable.
+
+In this experiment we represent each tweet by the mean vector of GloVe word 
+embeddings of all the words in the tweet. We believe this representation choice 
+is justified by the results of the Experiment 1, where we show that temporal 
+information is not crucial for emoji prediction. As can be seen from 
+Table~\ref{tab:accuracy} the performance of neural network which uses mean GloVe 
+vector as the input representation (model NN GloVe) achieves good enough 
+accuracy compared to the models using TF-IDF vectors and sequences of GloVe word
+embeddings to justify using mean GloVe vectors as representations in our 
+clustering experiment, especially since the goal here isn't to develop a 
+state-of-the-art method, but only to deepen the understanding of the task of 
+emoji prediction.
+
+We run the experiment for various number of classes between $20$ and $100$.
+The results are qualitatively similiar in all cases. Most clusters include a 
+mix of emojis without the clear winner, so we present here a few interesting and
+informative examples. Clusters are shown in Figure~\ref{fig:clusters}.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=\columnwidth]{img/clusters.pdf}
+\caption{Some of the more interesting clusters. Each row represents a cluster. 
+Percentages of the emojis contained in the cluster are shown on the x-axis. Only
+emojis that constitute more than 5\% of the cluster are shown, while others are 
+aggregated in the dark grey areas on the right side of each cluster.}
+\label{fig:clusters}
+\end{center}
+\end{figure}
+
+Most of the tweets in cluster C1 are Christmas themed and contain \emoji{1F384}.
+They are perfect examples of tweets whose class (containing emoji) is easy to 
+predict. The theme of the tweets is very clearly expressed (very often by the 
+exact word \emph{Christmas}) so even the very basic models will have no trouble 
+of classifying them, which can be seen easily in 
+Figure~\ref{fig:confusion_matrix}. However, there are still more than 20\% of 
+tweets in this cluster that don't contain \emoji{1F384}. Most of them also have 
+the similar Christmassy meaning, but their authors chose a different emoji to 
+accompany the message\footnote{There are also quite a few \emph{good morning} 
+tweets in this cluster.}. There is no way, and it is unreasonable to expect, 
+that any model might predict all of those emojis, for a model can only learn to 
+assign a single emoji to a specific tweet content, but different users might 
+choose different emojis. It is obvious that mere tweet content in many cases 
+wont be enough to make a good prediction.
+
+Clusters C2 and C3 show the problem of synonymy among emojis. It is obvious that
+most of the tweets in those clusters convey a warm, loving, and in most cases, 
+romantic message. In both clusters heart emojis make up more than 60\% of emojis
+which makes it relatively easy for most models to recognize the general theme. 
+But even in our limited set of 20 most frequent emojis, there are 5 heart emojis
+which act as a synonyms. So even if the model is able to identify the general 
+meaning of the tweet, it is still very hard for the model to predict the exact 
+emoji. The reason is again that not all users will choose the same emoji to 
+convey the meaning of romantic love, and without some background information 
+about the author of the tweet, the model cannot make an informed decision.
+
+Clusters C4 and C5 convey mostly negative emotions: sadness, confusion, 
+annoyance and grief. It is suprising to find \emoji{1F4AF} and \emoji{1F602} in 
+the mix. But the reason is pretty simple: those emojis are used here mostly in 
+sarcastic setting. One could think that since thare are many sarcasm detection 
+systems available, that they would be able to solve this problem. Unfortunately,
+that might not be of much help because after removing the emoji most of those 
+tweets don't seem sarcastic anymore, for it is the emoji that signals the 
+sarcasm. With emoji removed those tweets look like all the regular tweets with 
+negative sentiment, and most models would assign them the emoji accordingly. 
+This could be investigated further, espacially with advances in sarcasm 
+detection in mind.
+
+Cluster C6 represents tweets with general positive sentiment that deliver joyful
+messages. In most cases it is hard to pin point the emoji. For example in the 
+tweet
+\begin{displayquote}
+I just love when we all get together!! \emoji{1F384}
+\end{displayquote}
+it is very hard to predict the used emoji is \emoji{1F384}. It might help if the 
+model had some additional information about the tweet, like the time it was 
+tweeted (which is December 25 in this example) and this was investigated in more
+detail in \citep{barbieri2018exploring}. What could also help the model to 
+predict the correct emoji is the picture that might accompany the tweet. If the 
+example tweet included a picture of a family and a Christmas tree in the 
+backgound (which is not unlikely) the problem would be much easier.
+
+In other tweets in cluster C6 the problem of synonymy is apperent again. Some 
+users might show joy and happines using \emoji{1F60A}, while others might use
+\emoji{1F525} or \emoji{1F4AF}. Information about a user profile would without a
+doubt be helpful in emoji prediction.
 
 \section{Conclusions}
 
