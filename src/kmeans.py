@@ -21,8 +21,7 @@ from sklearn.neighbors import KNeighborsClassifier
 
 
 def emoji_counts(y, y_to_emoji):
-  return {y_to_emoji[y_]: 
-    int(100 * len([y__ for y__ in y if y__ == y_]) / len(y)) for y_ in set(y)}
+  return {y_to_emoji[y_]: len([y__ for y__ in y if y__ == y_]) / len(y) for y_ in set(y)}
 
 
 def main():
@@ -59,13 +58,17 @@ def main():
   clusters = np.array(
     [cluster.labels_ == k for k in range(n_clusters)])
 
-  for cluster in clusters:
+  text = np.array(text)
+  for i, cluster in enumerate(clusters):
     y_ = y[cluster]
+    text_ = text[cluster]
+    with open(f'cluster{i}.tsv', 'w') as file:
+      file.write('\n'.join([f'{t_, y_to_emoji[label_]}' for t_, label_ in zip(text[cluster], y_)]))
     print()
-    print([(e, c) for c, e in sorted(
-      [(v, k) for k, v in emoji_counts(y_, y_to_emoji).items()], reverse=True)])
-
-  
+    print(i, len(y_))
+    print([(e, round(100 * c, 2)) for c, e in sorted(
+      [(v, k) for k, v in emoji_counts(y_, y_to_emoji).items()], 
+      reverse=True)])
 
 
 if __name__ == '__main__':

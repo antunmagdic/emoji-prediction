@@ -1,7 +1,30 @@
 """
 Usage:
-python3 naive_bayes_tfidf.py train_data.tsv valid_data.tsv test_data.tsv
+python3 naive_bayes_counts.py train_data.tsv valid_data.tsv test_data.tsv
 """
+
+EMOJI_TO_Y = {
+  '❤': 0,
+  '💕': 1,
+  '💜': 2,
+  '💙': 3,
+  '🖤': 4,
+  '😍': 5,
+  '😊': 6,
+  '😭': 7,
+  '😔': 8,
+  '😩': 9,
+  '😂': 10,
+  '🤣': 11,
+  '🤔': 12,
+  '🙄': 13,
+  '👀': 14,
+  '✨': 15,
+  '💯': 16,
+  '🔥': 17,
+  '💀': 18,
+  '🎄': 19
+}
 
 import argparse
 import data
@@ -12,10 +35,11 @@ import tokens
 
 import numpy as np
 
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import BernoulliNB
 from sklearn.naive_bayes import MultinomialNB
 
 
@@ -31,22 +55,22 @@ def main():
   dataset_test = data.load(args.test)
   representation = lambda x: x
   _, X_train, y_train, y_to_emoji = data.prepare(
-    dataset_train.text, dataset_train.emoji, representation)
-  emoji_to_y = {y_to_emoji[y_]: y_ for y_ in y_to_emoji}
+    dataset_train.text, dataset_train.emoji, representation,
+    emoji_to_y=lambda emoji: EMOJI_TO_Y[emoji])
   _, X_valid, y_valid, y_to_emoji = data.prepare(
     dataset_valid.text, dataset_valid.emoji, representation,
-    emoji_to_y=lambda emoji: emoji_to_y[emoji])
+    emoji_to_y=lambda emoji: EMOJI_TO_Y[emoji])
   _, X_test, y_test, y_to_emoji = data.prepare(
     dataset_test.text, dataset_test.emoji, representation,
-    emoji_to_y=lambda emoji: emoji_to_y[emoji])
+    emoji_to_y=lambda emoji: EMOJI_TO_Y[emoji])
 
-  vectorizer = TfidfVectorizer()
+  vectorizer = CountVectorizer(binary=True)
   
   X_train = vectorizer.fit_transform(X_train)
-  X_valid = vectorizer.fit_transform(X_valid)
+  X_valid = vectorizer.transform(X_valid)
   X_test = vectorizer.transform(X_test)
   
-  clf = MultinomialNB(alpha=0.5)
+  clf = BernoulliNB(alpha=0)
 
   print('Fitting the classifier...', end='', flush=True)
   clf.fit(X_train, y_train)
@@ -67,7 +91,8 @@ def main():
 
   for k, v in sorted([(k, y_to_emoji[k]) for k in y_to_emoji]):
     print(f'{k}: {v}')
-  plot.confusion_matrix(confusion_matrix(y_test, test_predicted), set(y_test))
+  plot.confusion_matrix(confusion_matrix(y_test, test_predicted), set(y_test), 
+                        sqrt=True)
 
   while True:
     tweet = input('Tweet: ')

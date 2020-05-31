@@ -40,8 +40,8 @@ def main():
 
   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
 
-  clf = LogisticRegression(multi_class='auto')
-  # clf = KNeighborsClassifier(10)
+  # clf = LogisticRegression(multi_class='auto')
+  clf = KNeighborsClassifier(10)
 
   print('Fitting the classifier...', end='', flush=True)
   clf.fit(X_train, y_train)
