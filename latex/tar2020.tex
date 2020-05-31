@@ -1,0 +1,200 @@
+\documentclass[10pt, a4paper]{article}
+
+\usepackage{tar2020}
+
+\usepackage[utf8]{inputenc}
+\usepackage[pdftex]{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[twitter]{emoji}
+\usepackage{numprint}
+
+\DeclareMathOperator*{\argmax}{argmax}
+
+% smile 			\emoji{1F60A}
+% tired				\emoji{1F629}
+% read heart		\emoji{2764}
+% think 			\emoji{1F914}
+% fire				\emoji{1F525}
+% rolling eyes		\emoji{1F644}
+% 100				\emoji{1F4AF}
+% joy tears			\emoji{1F602}
+% eyes				\emoji{1F440}
+% blue heart		\emoji{1F499}
+% two hearts		\emoji{1F495}
+% crying			\emoji{1F62D}
+% black heart		\emoji{1F5A4}
+% stars				\emoji{2728}
+% sad				\emoji{1F614}
+% purple heart		\emoji{1F49C}
+% skull				\emoji{1F480}
+% christmas tree	\emoji{1F384}
+% heart eyes		\emoji{1F60D}
+	
+\title{It's complicated \emoji{1F384}}
+
+\name{Matija Bertović, Antun Magdić, Ante Žužul} 
+
+\address{
+University of Zagreb, Faculty of Electrical Engineering and Computing\\
+Unska 3, 10000 Zagreb, Croatia\\ 
+% \texttt{autor1@xxx.hr}, \texttt{\{autor2,autor3\}@zz.com}\\
+\texttt{\{matija.bertovic,antun.magdic,ante.zuzul2\}@fer.hr}
+}
+          
+         
+\abstract{ 
+Abstract...
+}
+
+\begin{document}
+
+\maketitleabstract
+
+\section{Introduction}
+
+\section{Related work}
+
+\section{Dataset}
+
+We frame the task of emoji prediction as a supervised learning task. Each 
+example is made of a tweet labelled by the emoji it contains which is removed 
+from the tweet body as in \citep{barbieri2017emojis}. 
+
+We gathered ten million tweets from the period between November 1, 2018 and 
+December 31, 2018. From those tweets we extracted only the ones which contain a 
+single emoji. In the final dataset we keep only the tweets where one of the 20 
+most frequent emojis occurs. We split the data in train, validation and test 
+sets containing \numprint{120000}, \numprint{40000} and \numprint{40000} tweets,
+respectively. Classes in all sets are perfectly balanced\footnote{... as all 
+things should be.}.
+
+\section{Models and Representations}
+
+We experimented with various models. Different models use different input 
+representations which include binary bag of words vectors, TF-IDF vectors 
+\citep{manning2008introduction}, as well as100 dimensional GloVe word embeddings
+pretrained on Twitter data \citep{pennington2014glove}.
+
+In the following subsections $\hat{y}$ is used to denote the predicted class, 
+and $\mathcal{Y}$ is used to denote the set of all classes. The classes are 
+labelled by integers ranging from $1$ to $20$, so $\mathcal{Y} = \{1, 2, 3,
+\ldots, 20\}$.
+
+\subsection{Na\"{i}ve Bayes}
+
+Na\"{i}ve Bayes \citep{manning2008introduction} is a probabillistic model for 
+classification. It takes advantage of the Bayes rule to compute the probability 
+$$P(y|\mathbf{x}) = \frac{\mathcal{L}(y|\mathbf{x}) P(y)}{P(\mathbf{x})},$$
+where $y$ is the class label, $\mathbf{x}$ is the example to be classified and 
+$\mathcal{L}$ is the likelihood function. Example is then assigned to the class 
+$\hat{y}$ with the highest probability:
+
+$$\hat{y} = \argmax_{y \in \mathcal{Y}} P(y|\mathbf{x}).$$
+
+When using this model, we represent each tweet with a binary bag of words vector
+and we use multivariate Bernoulli distribution as the likelihood function, where
+we make the na\"{i}ve assumption of conditional independence of words in a 
+tweet, given the tweet's class label.
+
+\subsection{Logistic regression}
+
+Logistic regression \citep{murphy2012machine} is a simple discriminative model.
+We train a logistic regression classifier for each class. The output of the 
+classifier trained for the class $y$ is the predicted probability that the given
+example belongs to the class $y$. The probability is given by
+$$P(y|\mathbf{x}) = \frac{1}{1 + e^{-(\mathbf{w}^\top \mathbf{x} + b)}},$$
+where $\mathbf{w}$ and $b$ are learned parameters. We then use OVR strategy 
+\citep{bishop2006pattern} to make the final classification. Class with the 
+maximum predicted probability is assigned to the input example, that is 
+$$\hat{y} = \argmax_{y \in \mathcal{Y}} P(y|\mathbf{x}).$$
+
+We use this model with two different input representations: TF-IDF vectors and 
+mean vectors of GloVe word embeddings of all the words in the tweet. In both 
+cases we set the regularization parameter to $0.1$.
+
+\subsection{Feed forward neural network}
+
+Neural networks have shown to be strong performers at solving various problems,
+so we also use them for the task of emoji prediction. 
+
+We train two feed forward neural networks. One uses TF-IDF vector of a tweet as 
+the input representation, while the other uses the mean vector of GloVe word 
+embeddings of all the words in the tweet.
+
+We use one hidden layer with size 100 in the network with TF-IDF input 
+representation and we use three hidden layers with sizes 150, 100, 50 in the 
+network with mean GloVe input representation. We set the regularization 
+parameter to $10^{-5}$ for both networks.
+
+\subsection{LSTM}
+
+A class of neural networks that performs remarkably well on NLP tasks are 
+recurrent neural networks. Hence, we also use a Long Short-Term Memory (LSTM) 
+network \citep{hochreiter1997long}.
+
+LSTM is a type of recurrent neural network that is able to capture long-term 
+dependencies. Fully-connected layer is added after the LSTM cell to map the 
+output of the LSTM cell to the vector of class logits. The final output of the 
+network, i.\,e. the predicted class $\hat{y}$, is the class with the highest 
+logit value:
+$$\hat{y} = \argmax_{y \in \mathcal{Y}} 
+    \,(\mathbf{W} \mathbf{o} + \mathbf{b})_y,$$
+where $\mathbf{o}$ is the output of the LSTM cell and $\mathbf{W}$ and 
+$\mathbf{b}$ are learned parameters of the fully-connected layer. $y$ is used to
+index the output vector of logits, so $y$ for which the highest logit is 
+obtained is selected as the predicted class.
+
+Two bidirectional LSTM (BLSTM) layers with hidden state size of 300 are used in 
+the LSTM cell. A single bidirectional LSTM layer is composed of two standard 
+LSTM layers, where one is processing the input sequence from the first word to 
+the last word and the other is going the opposite way. This way, both past and 
+future context is available at every time step. Both of those layers' outputs 
+are then concatenated into a single output vector of size 600. After the first 
+BLSTM layer, a dropout layer with dropout probability $0.2$ is used. In the end,
+a fully-connected layer with output size of 20 is used, because there are 20 
+different classes.
+
+Parameters are optimized using ADAM \citep{kingma2014adam} with the initial 
+learning rate of $10^{-3}$. The model is trained for $20$ epochs over the train 
+set with the batch size of $32$.
+
+Each input tweet is represented by a sequence of GloVe word embeddings.
+
+\section{Results}
+
+\subsection{Experiment 1}
+
+\begin{table}
+\caption{Accuracy various models on test data.}
+\label{tab:accuracy}
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+Model & Accuracy (\%) \\
+\midrule
+NB            & 0 \\
+LR GloVe      & 0 \\
+LR TF-IDF     & 0 \\
+NN GloVe      & 0 \\
+NN TF-IDF     & 0 \\
+LSTM          & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\subsection{Experiment 2}
+
+\section{Clustering?}
+
+\section{Conclusions}
+
+% \section*{Acknowledgements}
+
+\bibliographystyle{tar2020}
+\bibliography{tar2020} 
+
+\end{document}
+
