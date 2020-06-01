@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{textpos}
 \usepackage{csquotes}
+\usepackage{booktabs}
 \usepackage[twitter]{emoji}
 
 % smile 			\emoji{1F60A}
@@ -89,26 +90,78 @@
 \begin{frame}{Dataset}
 	\begin{itemize}
 		\item 10 million tweets collected
-		\item only tweets with single emoji kept
-		\item final data: $200\,000$ tweets ($20 \times 10\,000$)
-		\item train: $120\,000$, validation: $40\,000$, test: $40\,000$ (all balanced) 
-		\item tweet text $\mapsto$ emoji
+		\item Only tweets with single emoji kept
+		\item Final data: $200\,000$ tweets ($20 \times 10\,000$)
+		\item Train: $120\,000$, validation: $40\,000$, test: $40\,000$ (all balanced) 
+		\item Tweet text $\mapsto$ emoji
 	\end{itemize}
 \end{frame}
 
 
-\begin{frame}{Models and representations}
-
+\begin{frame}{Experiment 1}
+	\begin{columns}
+		\column{0.55\textwidth}
+		\begin{itemize}
+			\item We compare various models:
+			\begin{itemize}
+				\item Na\"ive Bayes (NB)
+				\item Logistic regression (LR)
+				\item Feed forward neural network (NN)
+				\item Bidirectional LSTM (BLSTM)
+			\end{itemize}
+			\item GloVe vs TF-IDF
+			\item Word order
+			\item Na\"ive assumption
+		\end{itemize}
+		\column{0.45\textwidth}
+		\begin{table}
+			\begin{center}
+				\begin{tabular}{lr}
+					\toprule
+					Model & Accuracy (\%) \\
+					\midrule
+					NB        & 51.15 \\
+					LR GloVe  & 33.78 \\
+					LR TF-IDF & 53.35 \\
+					NN GloVe  & 45.67 \\
+					NN TF-IDF & 51.05 \\
+					BLSTM     & 51.40 \\
+					\bottomrule
+				\end{tabular}
+			\end{center}
+		\end{table}
+	\end{columns}	
 \end{frame}
 
-
-\begin{frame}{Results}
-
+\begin{frame}{Experiment 1}
+	\begin{figure}
+		\begin{center}
+			\includegraphics[width=0.6\columnwidth]{img/confusion_matrix.pdf}
+		\end{center}
+	\end{figure}
 \end{frame}
 
+\begin{frame}{Experiment 2}
+	\begin{itemize}
+		\item K-Means with GloVe (50 clusters)
+	\end{itemize}
+	\begin{figure}
+		\begin{center}
+			\includegraphics[width=0.6\columnwidth]{img/clusters.pdf}
+		\end{center}
+	\end{figure}
+\end{frame}
 
 \begin{frame}{Conclusion}
-
+	\begin{itemize}
+		\item Main difficulties:
+		\begin{itemize}
+			\item Synonymy among emojis
+			\item Subjective meanings
+			\item Sarcasm
+		\end{itemize}
+		\item More information is needed for better performance
+	\end{itemize}
 \end{frame}
 
 \end{document}
