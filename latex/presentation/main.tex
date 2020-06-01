@@ -1,6 +1,29 @@
 \documentclass{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage{textpos}
+\usepackage{csquotes}
+\usepackage[twitter]{emoji}
+
+% smile 			\emoji{1F60A}
+% tired				\emoji{1F629}
+% read heart		\emoji{2764}
+% think 			\emoji{1F914}
+% fire				\emoji{1F525}
+% rolling eyes		\emoji{1F644}
+% 100				\emoji{1F4AF}
+% joy tears			\emoji{1F602}
+% eyes				\emoji{1F440}
+% blue heart		\emoji{1F499}
+% two hearts		\emoji{1F495}
+% crying			\emoji{1F62D}
+% black heart		\emoji{1F5A4}
+% stars				\emoji{2728}
+% sad				\emoji{1F614}
+% purple heart		\emoji{1F49C}
+% skull				\emoji{1F480}
+% christmas tree	\emoji{1F384}
+% heart eyes		\emoji{1F60D}
+% rolling laugh		\emoji{1F923}
 
 \usetheme{Boadilla}
 
@@ -40,36 +63,37 @@
 \subtitle{TAR project}
 \author{Matija Bertović, Antun Magdić, Ante Žužul}
 \institute{University of Zagreb \\ Faculty of Electrical Engineering and Computing}
-\date{1 June 2020}
+\date{\today}
 
 \begin{document}
 
 \maketitle
 
-\begin{frame}{Content}
-    \begin{enumerate}
-     	\item Motivation
-        \item Introduction
-        \item Dataset
-        \item Models and representations
-        \item Results
-        \item Conclusion
-    \end{enumerate}
+\begin{frame}{}
+	\begin{displayquote}
+		This song is lit! \pause \emoji{1F525} \pause
+	\end{displayquote}
+	\begin{displayquote}
+		And to all, a Merry Christmas! \pause \emoji{1F384} \pause
+	\end{displayquote}
+	\begin{displayquote}
+		I need new friends... \pause \emoji{1F614} \pause \emoji{1F602} \pause
+	\end{displayquote}
+	\begin{displayquote}
+		I'm so happy to have you \pause \emoji{2764} \emoji{1F495} \emoji{1F499} \emoji{1F49C} \emoji{1F60D}
+	\end{displayquote}
 \end{frame}
 
-
-\begin{frame}{Motivation}
-
-\end{frame}
-
-
-\begin{frame}{Introduction}
-
-\end{frame}
 
 
 \begin{frame}{Dataset}
-
+	\begin{itemize}
+		\item 10 million tweets collected
+		\item only tweets with single emoji kept
+		\item final data: $200\,000$ tweets ($20 \times 10\,000$)
+		\item train: $120\,000$, validation: $40\,000$, test: $40\,000$ (all balanced) 
+		\item tweet text $\mapsto$ emoji
+	\end{itemize}
 \end{frame}
 
 
