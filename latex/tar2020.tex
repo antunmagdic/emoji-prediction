@@ -32,8 +32,9 @@
 % skull				\emoji{1F480}
 % christmas tree	\emoji{1F384}
 % heart eyes		\emoji{1F60D}
+% rolling laugh     \emoji{1F923}
 	
-\title{Why is emoji prediction difficult?}
+\title{Why Is Emoji Prediction Difficult?}
 
 \name{Matija Bertović, Antun Magdić, Ante Žužul} 
 
@@ -42,20 +43,19 @@ University of Zagreb, Faculty of Electrical Engineering and Computing\\
 Unska 3, 10000 Zagreb, Croatia\\ 
 % \texttt{autor1@xxx.hr}, \texttt{\{autor2,autor3\}@zz.com}\\
 \texttt{\{matija.bertovic,antun.magdic,ante.zuzul2\}@fer.hr}
-}
-          
+}    
          
 \abstract{
-With the rise in popularity of social networks such as Facebook, Twitter, Instagram
-and many others emojis have become more prominent and ubiquitous than most 
-people could have expected. People today use them for various purposes and 
-emojis can contain much information. Because of that they could prove to be 
-useful for various NLP tasks. The same way word prediction helps models to 
-"understand" words, emoji prediction could help them to "understand" emojis. 
+With the rise in popularity of social networks such as Facebook, Twitter and
+Instagram, emojis have become more prominent and ubiquitous than most people 
+could have expected. Nowadays, we use them for various purposes. Since they 
+carry additional information, they could be of great use for various NLP tasks. 
+The same way word prediction helps models to "understand" words, emoji 
+prediction could help them "understand" emojis. 
 But the task of emoji prediction is much harder than the task of predicting 
 words. In this paper we compare simple models on the task of emoji prediction 
 with the goal of identifying the main difficulties. We then cluster emojis to 
-show main sources of problems arising in their prediction.
+show main sources of problems occurring in their prediction.
 }
 
 \begin{document}
@@ -64,7 +64,7 @@ show main sources of problems arising in their prediction.
 
 \section{Introduction}
 It is not wrong to say that the world without emojis is unimaginable. Those 
-miniature pictures have an enormous imapct on our lives, probably much more so than
+miniature pictures have an enormous impact on our lives, probably much more than
 we actually realize. Billions of emojis are used by people all around the world 
 every day to better express themselves. Some use them to add emotion to the text, 
 some to better communicate the message they want to send, some to indicate 
@@ -74,8 +74,8 @@ details to the text, while at other times they are used to completely replace th
 And they often replace it very well. One emoji can often contain as much, 
 if not more, information as multiple words.
 
-It is obvious that since emojis contain much information and that their understanding
-could improve performance on many NLP tasks. So far, the majority of works handle 
+It is obvious that since emojis contain a lot of information, their understanding
+could improve performance on many NLP tasks. So far, the majority of work handled
 the emoji prediction in a similar way and produced satisfying results. However, 
 this problem might be too difficult the way it is currently approached. 
 
@@ -94,28 +94,28 @@ the task of emoji prediction to gain some insight about the problem. After that,
 we cluster emojis and point to some issues that should be resolved before
 emoji prediction could substantially improve.
 
-One great thing about emoji prediction is that there are much available and 
+One great thing about emoji prediction is that there is much available and 
 easily obtainable data. There are billions of new emojis occurrences on 
 Facebook, Twitter, Instagram and various other social networks every day. In 
 this paper we use data from Twitter. Ten million tweets are collected and tweets
 with most frequent emojis are used for the task of emoji prediction.
 
-\section{Related work}
+\section{Related Work}
 Over time, emojis evolved into ubiquitous and powerful communication mechanism, especially on social networks. Therefore, there has been a rise in the number of studies trying to understand them better and even predict them. As far as we know, most of the previous works are mainly focused on emoji prediction, rather than examination of their true meaning. 
 
-State-of-the-art results for emoji prediction task are obtained mostly by models based on bidirectional LSTMs (BLSTMs) \citep{barbieri2017}. In addition to BLSTM, attention mechanism ensures dropout of less informative words \citep{millions}. Another interesting approach to the emoji prediction problem is an investigation of the temporal information impact on emojis \citep{temporal}. It is shown that the usage of some emojis variates depending on the time of the year.
+State-of-the-art results for emoji prediction task are obtained mostly by models based on bidirectional LSTMs (BLSTMs) \citep{barbieri2017}. In addition to BLSTM, attention mechanism ensures dropout of less informative words \citep{millions}. Another interesting approach to the emoji prediction problem is an investigation of the temporal information impact on emojis \citep{temporal}. It is shown that the usage of some emojis varies depending on the time of the year.
 
-On the other hand, emoji prediction seems impossible if the meaning of emoji is unknown. \citep{mean} used skip-gram embedding model for quantitve and qualitative evaluation of Twitter emojis. Vector pair similarity and relatedness tests were performed, as well as clustering. Each emoji was represented with cluster containing most similar text tokens.
+On the other hand, emoji prediction seems impossible if the meaning of emoji is unknown. \citet{mean} used skip-gram embedding model for quantitve and qualitative evaluation of Twitter emojis. Vector pair similarity and relatedness tests were performed, as well as clustering. Each emoji was represented with cluster containing most similar text tokens.
 
 \section{Dataset}
 
 We frame the task of emoji prediction as a supervised learning task. Each 
-example is made of a tweet labelled by the emoji it contains which is removed 
+example is made of a tweet labelled with the emoji it contains, which is removed 
 from the tweet body as in \citep{barbieri2017emojis}. 
 
 We gathered ten million tweets from the period between November 1, 2018 and 
 December 31, 2018. From those tweets we extracted only the ones which contain a 
-single emoji. In the final dataset we keep only the tweets where one of the 20 
+single emoji. In the final dataset we kept only the tweets where one of the 20 
 most frequent emojis occurs. We split the data in train, validation and test 
 sets containing \numprint{120000}, \numprint{40000} and \numprint{40000} tweets,
 respectively. Classes in all sets are perfectly balanced\footnote{... as all 
@@ -126,8 +126,8 @@ things should be.}.
 
 We experimented with various models. Different models use different input 
 representations which include binary bag of words vectors, TF-IDF vectors 
-\citep{manning2008introduction}, as well as100 dimensional GloVe word embeddings
-pretrained on Twitter data \citep{pennington2014glove}.
+\citep{manning2008introduction}, as well as 100 dimensional GloVe word 
+embeddings pretrained on Twitter data \citep{pennington2014glove}.
 
 In the following subsections $\hat{y}$ is used to denote the predicted class, 
 and $\mathcal{Y}$ is used to denote the set of all classes. The classes are 
@@ -150,7 +150,7 @@ and we use multivariate Bernoulli distribution as the likelihood function, where
 we make the na\"{i}ve assumption of conditional independence of words in a 
 tweet, given the tweet's class label.
 
-\subsection{Logistic regression}
+\subsection{Logistic Regression}
 
 Logistic regression \citep{murphy2012machine} is a simple discriminative model.
 We train a logistic regression classifier for each class. The output of the 
@@ -166,7 +166,7 @@ We use this model with two different input representations: TF-IDF vectors and
 mean vectors of GloVe word embeddings of all the words in the tweet. In both 
 cases we set the regularization parameter to $0.1$.
 
-\subsection{Feed forward neural network}
+\subsection{Feed Forward Neural Network}
 
 Neural networks have shown to be strong performers at solving various problems,
 so we also use them for the task of emoji prediction. 
@@ -217,8 +217,8 @@ Each input tweet is represented by a sequence of GloVe word embeddings.
 \section{Results}
 
 We run two experiments. In the first experiment we compare various models and 
-their performances on the task of emoji prediction and in the second we try to 
-gain some insight about the use of emojis in tweets and the difficulties in 
+their performances on the task of emoji prediction and in the second one we try 
+to gain some insight about the use of emojis in tweets and the difficulties in 
 their prediction.
 
 \subsection{Experiment 1}
@@ -289,10 +289,10 @@ neural network using TF-IDF representation is shown. Some interesting
 information can be extracted from the confusion matrix. It can be seen that the
 model often confuses emojis in the following groups: \emoji{2764}, 
 \emoji{1F495}; \emoji{1F62D}, \emoji{1F614}, \emoji{1F629}; \emoji{1F602},
-\emoji{1F644} and \emoji{1F914}, \emoji{1F644}, \emoji{1F440}. Emojis in 
-those groups convey the same meaning so it is reasonable that the model has 
-trouble choosing between them. This issue will be explored in more detail in the
-following section.
+\emoji{1F923} and \emoji{1F914}, \emoji{1F644}, \emoji{1F440}. This is evident 
+from the squares along the main diagonal. Emojis in those groups convey the same
+meaning so it is reasonable that the model has trouble choosing between them. 
+This issue will be explored in more detail in the following section.
     
 \begin{figure}
 \begin{center}
@@ -346,7 +346,7 @@ Most of the tweets in cluster C1 are Christmas themed and contain \emoji{1F384}.
 They are perfect examples of tweets whose class (containing emoji) is easy to 
 predict. The theme of the tweets is very clearly expressed (very often by the 
 exact word \emph{Christmas}) so even the very basic models will have no trouble 
-of classifying them, which can be seen easily in 
+in classifying them, which can be seen easily in 
 Figure~\ref{fig:confusion_matrix}. However, there are still more than 20\% of 
 tweets in this cluster that don't contain \emoji{1F384}. Most of them also have 
 the similar Christmassy meaning, but their authors chose a different emoji to 
@@ -362,7 +362,7 @@ most of the tweets in those clusters convey a warm, loving, and in most cases,
 romantic message. In both clusters heart emojis make up more than 60\% of emojis
 which makes it relatively easy for most models to recognize the general theme. 
 But even in our limited set of 20 most frequent emojis, there are 5 heart emojis
-which act as a synonyms. So even if the model is able to identify the general 
+which act as synonyms. So even if the model is able to identify the general 
 meaning of the tweet, it is still very hard for the model to predict the exact 
 emoji. The reason is again that not all users will choose the same emoji to 
 convey the meaning of romantic love, and without some background information 
@@ -377,7 +377,7 @@ that might not be of much help because after removing the emoji most of those
 tweets don't seem sarcastic anymore, for it is the emoji that signals the 
 sarcasm. With emoji removed those tweets look like all the regular tweets with 
 negative sentiment, and most models would assign them the emoji accordingly. 
-This could be investigated further, espacially with advances in sarcasm 
+This could be investigated further, especially with advances in sarcasm 
 detection in mind.
 
 Cluster C6 represents tweets with general positive sentiment that deliver joyful
@@ -394,8 +394,8 @@ predict the correct emoji is the picture that might accompany the tweet. If the
 example tweet included a picture of a family and a Christmas tree in the 
 backgound (which is not unlikely) the problem would be much easier.
 
-In other tweets in cluster C6 the problem of synonymy is apperent again. Some 
-users might show joy and happines using \emoji{1F60A}, while others might use
+In other tweets in cluster C6 the problem of synonymy is apparent again. Some 
+users might show joy and happiness using \emoji{1F60A}, while others might use
 \emoji{1F525} or \emoji{1F4AF}. Information about a user profile would without a
 doubt be helpful in emoji prediction.
 
