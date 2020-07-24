@@ -69,7 +69,7 @@ def main():
   X_valid = vectorizer.transform(X_valid)
   X_test = vectorizer.transform(X_test)
   
-  clf = MLPClassifier(hidden_layer_sizes=[100], max_iter=500, alpha=0.0001)
+  clf = MLPClassifier(hidden_layer_sizes=[100], max_iter=500, alpha=0.001)
 
   print('Fitting the classifier...', end='', flush=True)
   clf.fit(X_train, y_train)

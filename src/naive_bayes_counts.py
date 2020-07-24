@@ -70,7 +70,7 @@ def main():
   X_valid = vectorizer.transform(X_valid)
   X_test = vectorizer.transform(X_test)
   
-  clf = BernoulliNB(alpha=0)
+  clf = BernoulliNB(alpha=3)
 
   print('Fitting the classifier...', end='', flush=True)
   clf.fit(X_train, y_train)
